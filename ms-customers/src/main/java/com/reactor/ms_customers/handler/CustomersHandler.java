@@ -11,6 +11,8 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
+import java.util.Optional;
+
 import static com.reactor.ms_customers.domain.constants.MessageConstants.*;
 
 @Component
@@ -48,4 +50,19 @@ public class CustomersHandler {
                 .switchIfEmpty(ServerResponse.noContent().build());
     }
 
+    public Mono<ServerResponse> getCustomerById(ServerRequest request) {
+        return Mono.justOrEmpty(request.queryParam("idCustomer"))  // 🔹 Obtiene el parámetro `id` de la URL
+                .flatMap(id -> {
+                    try {
+                        return Mono.just(Integer.parseInt(id));
+                    } catch (NumberFormatException e) {
+                        return Mono.error(new IllegalArgumentException("Invalid 'idCustomer': must be an integer"));
+                    }
+                })
+                .flatMap(customersService::getCustomerById)
+                .flatMap(customer -> ServerResponse.ok().bodyValue(customer))
+                .switchIfEmpty(ServerResponse.notFound().build())
+                .onErrorResume(IllegalArgumentException.class, e ->
+                        ServerResponse.badRequest().bodyValue(e.getMessage()));
+    }
 }

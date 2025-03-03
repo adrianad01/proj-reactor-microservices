@@ -15,5 +15,7 @@ public interface ICustomersRepository extends JpaRepository<Customer, Integer> {
 
     CompletableFuture<Customer> findByIdCliente(Integer idCliente);
 
+    CompletableFuture<Customer> findByNombre(String nombre);
+
     CompletableFuture<Optional<Customer>> findByRfc(String rfc);
 }

@@ -61,4 +61,10 @@ public class CustomersService implements ICustomersService {
                 .flatMapMany(customers -> Flux.fromIterable(customers)
                         .map(customersMapper::entityToDto));
     }
+
+    @Override
+    public Mono<CustomerDTO> getCustomerById(int idCustomer){
+        return Mono.fromFuture(()-> customersRepository.findByIdCliente(idCustomer))
+                .map(customersMapper::entityToDto);
+    }
 }

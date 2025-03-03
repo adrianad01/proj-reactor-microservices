@@ -13,4 +13,6 @@ public interface ICustomersService {
     Mono<ResponseInfo> createCustomer(CustomerDTO customerDTO);
 
     Flux<CustomerDTO> getAllCustomers();
+
+    Mono<CustomerDTO> getCustomerById(int idCustomer);
 }
