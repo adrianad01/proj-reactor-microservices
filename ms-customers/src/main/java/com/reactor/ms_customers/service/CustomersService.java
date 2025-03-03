@@ -1,4 +1,56 @@
 package com.reactor.ms_customers.service;
 
-public class CustomersService {
+import com.reactor.ms_customers.domain.dto.CustomerDTO;
+import com.reactor.ms_customers.domain.entity.Customer;
+import com.reactor.ms_customers.domain.responses.ResponseInfo;
+import com.reactor.ms_customers.mapper.ICustomersMapper;
+import com.reactor.ms_customers.persistence.ICustomersRepository;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
+
+import java.time.LocalDateTime;
+
+import static com.reactor.ms_customers.domain.constants.MessageConstants.INFORMACION_GUARDADA;
+import static com.reactor.ms_customers.domain.constants.MessageConstants.RFC_EXISTENTE;
+
+@Service
+@Slf4j
+@RequiredArgsConstructor
+public class CustomersService implements ICustomersService {
+    private final ICustomersMapper customersMapper;
+    private final ICustomersRepository customersRepository;
+
+    @Transactional
+    @Override
+    public Mono<ResponseInfo> createCustomer(CustomerDTO customerDTO) {
+        ResponseInfo responseInfo = new ResponseInfo();
+        Customer customerEntity = customersMapper.dtoToEntity(customerDTO);
+
+        if (customerEntity.getFechaAlta() == null) {
+            customerEntity.setFechaAlta(LocalDateTime.now());
+        }
+
+        return Mono.fromFuture(() -> customersRepository.findByRfc(customerEntity.getRfc()))
+                .flatMap(optionalRfc -> optionalRfc
+                        .map(existingCustomer -> {
+                            ResponseInfo.fillResponse(responseInfo, false, 1, RFC_EXISTENTE);
+                            return Mono.just(responseInfo);
+                        })
+                        .orElseGet(() -> saveCustomer(customerEntity)
+                                .then(Mono.fromCallable(() -> {
+                                    ResponseInfo.fillResponse(responseInfo, true, 0, INFORMACION_GUARDADA);
+                                    return responseInfo;
+                                }))
+                        )
+                );
+    }
+
+    private Mono <Customer> saveCustomer(Customer customerEntity) {
+        return Mono.fromCallable(() -> customersRepository.save(customerEntity))
+                .subscribeOn(Schedulers.boundedElastic());
+    }
 }
