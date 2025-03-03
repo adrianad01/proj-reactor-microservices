@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
@@ -52,5 +53,12 @@ public class CustomersService implements ICustomersService {
     private Mono <Customer> saveCustomer(Customer customerEntity) {
         return Mono.fromCallable(() -> customersRepository.save(customerEntity))
                 .subscribeOn(Schedulers.boundedElastic());
+    }
+
+    @Override
+    public Flux<CustomerDTO> getAllCustomers() {
+        return Mono.fromFuture(customersRepository::findAllBy)
+                .flatMapMany(customers -> Flux.fromIterable(customers)
+                        .map(customersMapper::entityToDto));
     }
 }

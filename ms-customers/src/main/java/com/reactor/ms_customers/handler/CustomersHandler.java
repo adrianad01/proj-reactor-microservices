@@ -38,4 +38,14 @@ public class CustomersHandler {
                 })
                 .switchIfEmpty(Mono.error(new CustomException(REQUEST_INVALIDO, HttpStatus.BAD_REQUEST.value())));
     }
+
+    public Mono<ServerResponse> getAllCustomers(ServerRequest request) {
+        return customersService.getAllCustomers()
+                .collectList()
+                .flatMap(customers -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(customers))
+                .switchIfEmpty(ServerResponse.noContent().build());
+    }
+
 }
