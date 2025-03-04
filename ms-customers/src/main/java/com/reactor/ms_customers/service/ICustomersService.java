@@ -1,7 +1,6 @@
 package com.reactor.ms_customers.service;
 
 import com.reactor.ms_customers.domain.dto.CustomerDTO;
-import com.reactor.ms_customers.domain.entity.Customer;
 import com.reactor.ms_customers.domain.responses.ResponseInfo;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
