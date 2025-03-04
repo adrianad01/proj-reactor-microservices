@@ -13,6 +13,7 @@
   <!-- 📌 Definir los módulos (Microservicios) -->
   <modules>
     <module>ms-customers</module>
+    <module>ms-auth</module>
   </modules>
 
   <!-- 📌 Definir propiedades comunes -->
