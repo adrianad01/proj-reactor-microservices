@@ -1,18 +1,20 @@
 package com.reactor.ms_customers.domain.responses;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class ResponseInfo {
 
-    private boolean isSuccessful;
+    private boolean successful;  // 🔹 Cambiado de `isSuccessful` a `successful`
     private int idResult;
     private String messageResult;
 
@@ -23,7 +25,6 @@ public class ResponseInfo {
                 int parseIdResult = 0;
                 Integer.parseInt(stringMessage[0]);
                 idResult = parseIdResult;
-
             }
             instance.setSuccessful(isSuccessful);
             instance.setIdResult(idResult);
