@@ -18,33 +18,12 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 @Configuration
 public class CustomersRouterConfiguration {
 
-    @RouterOperations({
-            @RouterOperation(
-                    path = GET_CUSTOMER_BY_ID,
-                    beanClass = CustomersHandler.class,
-                    beanMethod = "getCustomerById",
-                    operation = @Operation(
-                            summary = "Obtener cliente por ID",
-                            description = "Devuelve un cliente según su ID",
-                            parameters = {
-                                    @Parameter(
-                                            name = "idCustomer",
-                                            in = ParameterIn.QUERY,
-                                            description = "El ID del cliente",
-                                            required = true,
-                                            example = "123"
-                                    )
-                            }
-                    )
-            ),
-
-    })
-
     @Bean
     public RouterFunction<ServerResponse> customerRouter(CustomersHandler customerHandler) {
         return RouterFunctions.route(POST(ADD_CUSTOMER), customerHandler::createCustomer)
                 .andRoute(GET(GET_ALL_CUSTOMERS), customerHandler::getAllCustomers)
-                .andRoute(GET(GET_CUSTOMER_BY_ID).and(queryParam("idCustomer", id -> true)), customerHandler::getCustomerById);
+                .andRoute(GET(GET_CUSTOMER_BY_ID).and(queryParam("idCustomer", id -> true)), customerHandler::getCustomerById)
+                .andRoute(PUT(UPDATE_CUSTOMER), customerHandler::updateCustomer);
     }
 }
 

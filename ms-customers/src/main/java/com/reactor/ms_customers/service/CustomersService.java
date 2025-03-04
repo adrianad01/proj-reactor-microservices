@@ -67,4 +67,25 @@ public class CustomersService implements ICustomersService {
         return Mono.fromFuture(()-> customersRepository.findByIdCliente(idCustomer))
                 .map(customersMapper::entityToDto);
     }
+
+    @Transactional
+    @Override
+    public Mono<ResponseInfo> updateCustomer(CustomerDTO customerDTO) {
+        ResponseInfo responseInfo = new ResponseInfo();
+        return Mono.fromFuture(() -> customersRepository.findByIdCliente(customerDTO.getIdCliente()))
+                .flatMap(existingCustomer -> {
+                    if (existingCustomer == null) {
+                        ResponseInfo.fillResponse(responseInfo, false, 0, "El cliente no existe, se debe crear");
+                        return Mono.just(responseInfo);
+                    }
+                    Customer updatedCustomer = customersMapper.dtoToEntity(customerDTO);
+                    updatedCustomer.setIdCliente(existingCustomer.getIdCliente());
+                    return Mono.fromCallable(() -> customersRepository.save(updatedCustomer))
+                            .subscribeOn(Schedulers.boundedElastic())
+                            .map(savedCustomer -> {
+                                ResponseInfo.fillResponse(responseInfo, true, 0, "Cliente actualizado correctamente");
+                                return responseInfo;
+                            });
+                });
+    }
 }
