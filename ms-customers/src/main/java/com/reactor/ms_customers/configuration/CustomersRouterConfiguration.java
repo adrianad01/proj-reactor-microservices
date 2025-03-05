@@ -16,9 +16,10 @@ public class CustomersRouterConfiguration {
     @Bean
     public RouterFunction<ServerResponse> customerRouter(CustomersHandler customerHandler) {
         return RouterFunctions.route(POST(ADD_CUSTOMER), customerHandler::createCustomer)
-                .andRoute(GET(GET_ALL_CUSTOMERS), customerHandler::getAllCustomers)
-                .andRoute(GET(GET_CUSTOMER_BY_ID).and(queryParam("idCustomer", id -> true)), customerHandler::getCustomerById)
+                .andRoute(GET(GET_ALL_CUSTOMERS), request -> customerHandler.getAllCustomers())
+                .andRoute(GET(GET_CUSTOMER_BY_ID), customerHandler::getCustomerById)
                 .andRoute(PUT(UPDATE_CUSTOMER), customerHandler::updateCustomer);
     }
+
 }
 

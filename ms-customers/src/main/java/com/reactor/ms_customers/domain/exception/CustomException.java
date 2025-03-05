@@ -1,7 +1,9 @@
 package com.reactor.ms_customers.domain.exception;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Getter;
 
+@Getter
 @JsonIgnoreProperties({"cause", "stackTrace", "localizedMessage", "suppressed"})
 public class CustomException extends RuntimeException{
 
@@ -11,18 +13,6 @@ public class CustomException extends RuntimeException{
 
     public CustomException(String message, int status) {
         this(message, status, "");
-    }
-
-    public String getMessage() {
-        return this.message;
-    }
-
-    public int getStatus() {
-        return this.status;
-    }
-
-    public String getTraceId() {
-        return this.traceId;
     }
 
     public CustomException(String message, int status, String traceId) {
