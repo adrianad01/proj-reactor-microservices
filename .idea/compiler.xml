@@ -7,7 +7,6 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="ms-auth" />
       </profile>
       <profile name="Annotation profile for microservices-project" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -23,14 +22,25 @@
         </processorPath>
         <module name="ms-customers" />
       </profile>
+      <profile name="Annotation profile for ms-auth-api" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.36/lombok-1.18.36.jar" />
+        </processorPath>
+        <module name="ms-auth-api" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="ms-auth" target="1.8" />
       <module name="ms-customers (1)" target="21" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="ms-auth" options="-parameters" />
+      <module name="ms-auth-api" options="-parameters" />
       <module name="ms-customers" options="-parameters" />
       <module name="ms-customers (1)" options="-parameters" />
     </option>
