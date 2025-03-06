@@ -27,6 +27,7 @@
           <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.6.3/mapstruct-1.6.3.jar" />
         </processorPath>
         <module name="ms-customers" />
+        <module name="ms-countries" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -38,6 +39,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="ms-auth" options="-parameters" />
       <module name="ms-auth-api" options="-parameters" />
+      <module name="ms-countries" options="-parameters" />
       <module name="ms-customers" options="-parameters" />
       <module name="ms-customers (1)" options="-parameters" />
     </option>
